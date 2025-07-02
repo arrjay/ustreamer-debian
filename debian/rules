@@ -5,14 +5,11 @@ include /usr/share/dpkg/architecture.mk
 
 # Prevent debhelper from generating an extra package with debug symbols.
 export DEB_BUILD_OPTIONS=noddebs
-
-export PREFIX=/opt/ustreamer
-export MANPREFIX=/usr/share/man
+export CFLAGS=-O3
+export PREFIX=/usr
 
 %:
 	dh $@
 
-override_dh_usrlocal:
-
 override_dh_auto_build:
-	dh_auto_build -- WITH_JANUS=1
+	dh_auto_build -- V=1 WITH_JANUS=1

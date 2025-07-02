@@ -1,0 +1,13 @@
+diff --git a/janus/Makefile b/janus/Makefile
+index 469f10b..5196842 100644
+--- a/janus/Makefile
++++ b/janus/Makefile
+@@ -10,7 +10,7 @@ LDFLAGS ?=
+ # =====
+ _PLUGIN = libjanus_ustreamer.so
+ 
+-_CFLAGS = -fPIC -MD -c -std=c17 -Wall -Wextra -D_GNU_SOURCE $(shell $(PKG_CONFIG) --cflags glib-2.0) $(CFLAGS)
++_CFLAGS = -fPIC -MD -c -std=c17 -Wall -Wextra -D_GNU_SOURCE -I/usr/include/janus $(shell $(PKG_CONFIG) --cflags glib-2.0) $(CFLAGS)
+ _LDFLAGS = -shared -lm -pthread -lrt -ljansson -lopus -lasound -lspeexdsp $(shell $(PKG_CONFIG) --libs glib-2.0) $(LDFLAGS)
+ 
+ _SRCS = $(shell ls src/uslibs/*.c src/*.c)

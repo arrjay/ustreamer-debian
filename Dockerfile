@@ -2,7 +2,7 @@
 # Enable here-documents:
 # https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/syntax.md#here-documents
 
-FROM debian:bullseye-20220328-slim AS build
+FROM debian:bookworm-20250630-slim AS build
 
 RUN set -x && \
     apt-get update && \
@@ -11,33 +11,14 @@ RUN set -x && \
       dpkg-dev \
       devscripts \
       git \
-      build-essential \
-      wget \
-      gnupg
-
-# Add bullseye-backports apt suite to later install janus dependency.
-RUN cat | bash <<'EOF'
-set -ex
-# Add keyring.
-wget \
-  --output-document - \
-  https://ftp-master.debian.org/keys/archive-key-11.asc | \
-  gpg \
-    --dearmor > \
-  /usr/share/keyrings/bullseye-archive-keyring.gpg
-# Add repository.
-echo 'deb [signed-by=/usr/share/keyrings/bullseye-archive-keyring.gpg] http://deb.debian.org/debian bullseye-backports main' > \
-  /etc/apt/sources.list.d/bullseye-backports.list
-# Update package index.
-apt-get update
-EOF
+      build-essential
 
 # Docker populates this value from the --platform argument. See
 # https://docs.docker.com/build/building/multi-platform/
 ARG TARGETPLATFORM
 
 ARG PKG_NAME='ustreamer'
-ARG PKG_VERSION='6.36'
+ARG PKG_VERSION='6.37'
 
 # This should be a timestamp, formatted `YYYYMMDDhhmmss`. That way the package
 # manager always installs the most recently built package.
@@ -73,7 +54,7 @@ RUN git \
       clone \
       --branch "v${PKG_VERSION}" \
       --depth 1 \
-      https://github.com/tiny-pilot/ustreamer.git \
+      https://github.com/pikvm/ustreamer.git \
       .
 
 COPY debian debian
@@ -118,7 +99,7 @@ ${PKG_NAME} (${PKG_VERSION}-${PKG_BUILD_NUMBER}) bullseye; urgency=medium
 
   * Latest µStreamer release.
 
- -- TinyPilot Support <support@tinypilotkvm.com>  $(date '+%a, %d %b %Y %H:%M:%S %z')
+ -- RJ Bergeron <rj@bergeron-us.net>  $(date '+%a, %d %b %Y %H:%M:%S %z')
 EOF
 
 # Install build dependencies based on Debian control file.
@@ -127,13 +108,6 @@ RUN mk-build-deps \
       --install \
       --remove \
       control
-
-# Allow Janus C header files to be included when compiling third-party plugins.
-# https://github.com/tiny-pilot/ansible-role-tinypilot/issues/192
-RUN sed \
-      --in-place \
-      's/^#include "refcount\.h"$/#include "\.\.\/refcount\.h"/g' \
-      /usr/include/janus/plugins/plugin.h
 
 # Rename the placeholder build directory to the final package ID.
 WORKDIR /build
