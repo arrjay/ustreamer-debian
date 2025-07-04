@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
-mkdir /output
-mv build/*.deb /output
-cd /output && zip packages.zip *.deb
+set -ex
+
+mkdir ./output
+mv build/*/*.deb ./output
+cd ./output && zip packages.zip *.deb
