@@ -18,6 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Sudo
+        run: apt-get update && apt-get -y install sudo
+
       - name: Set up Docker
         uses: docker/setup-docker-action@v3
 
