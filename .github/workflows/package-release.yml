@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Sudo
-        run: apt-get update && apt-get -y install sudo
+        run: apt-get update && apt-get -y install sudo iptables
 
       - name: Set up Docker
         uses: docker/setup-docker-action@v3
