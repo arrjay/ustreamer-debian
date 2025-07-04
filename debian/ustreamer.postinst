@@ -32,6 +32,3 @@ usermod \
   --append \
   --groups video \
   "${USTREAMER_USER}"
-
-# Assign ownership of the ustreamer dir to the ustreamer user and group.
-chown -R "${USTREAMER_USER}:${USTREAMER_GROUP}" /opt/ustreamer
